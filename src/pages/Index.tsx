@@ -1,11 +1,10 @@
-
 import Navbar from "@/components/Navbar";
 import SearchForm from "@/components/SearchForm";
 import GetawayCard from "@/components/GetawayCard";
 import MoodCard from "@/components/MoodCard";
 import TripCard from "@/components/TripCard";
 import Footer from "@/components/Footer";
-import { Beach, Compass, Heart, Mountain, Users } from "lucide-react";
+import { Waves, Compass, Heart, Mountain, Users } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 export default function Index() {
@@ -91,7 +90,7 @@ export default function Index() {
             <h2 className="text-3xl font-bold mb-8">Mood-based Suggestions</h2>
             <div className="grid md:grid-cols-2 gap-4">
               <MoodCard 
-                icon={Beach}
+                icon={Waves}
                 title="I want to relax"
                 description="Beach getaways and spa retreats for total relaxation"
               />
