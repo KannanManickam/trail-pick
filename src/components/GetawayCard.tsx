@@ -1,6 +1,8 @@
 
 import { Card, CardContent } from "@/components/ui/card";
-import { MapPin } from "lucide-react";
+import { MapPin, Heart } from "lucide-react";
+import { useState } from "react";
+import { useToast } from "@/hooks/use-toast";
 
 interface GetawayCardProps {
   title: string;
@@ -10,14 +12,39 @@ interface GetawayCardProps {
 }
 
 export default function GetawayCard({ title, description, imageUrl, location }: GetawayCardProps) {
+  const [favorite, setFavorite] = useState(false);
+  const { toast } = useToast();
+
+  const handleFavorite = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    setFavorite(!favorite);
+    toast({
+      title: favorite ? "Removed from favorites" : "Added to favorites",
+      description: `${title} has been ${favorite ? "removed from" : "added to"} your favorites.`,
+    });
+  };
+
+  const handleCardClick = () => {
+    toast({
+      title: "Destination selected",
+      description: `You selected ${title}. Full details would open here.`,
+    });
+  };
+
   return (
-    <Card className="travel-card overflow-hidden h-full">
+    <Card className="travel-card overflow-hidden h-full cursor-pointer" onClick={handleCardClick}>
       <div className="relative h-48 w-full overflow-hidden">
         <img 
           src={imageUrl} 
           alt={title} 
           className="h-full w-full object-cover transition-transform duration-300 hover:scale-105"
         />
+        <button 
+          className={`absolute top-2 right-2 p-2 rounded-full ${favorite ? 'bg-primary text-white' : 'bg-white/80'}`}
+          onClick={handleFavorite}
+        >
+          <Heart className={`h-4 w-4 ${favorite ? 'fill-white' : ''}`} />
+        </button>
       </div>
       <CardContent className="p-4">
         <div className="flex items-start justify-between mb-2">

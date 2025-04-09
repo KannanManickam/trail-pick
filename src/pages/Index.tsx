@@ -1,3 +1,5 @@
+
+import { useState } from "react";
 import Navbar from "@/components/Navbar";
 import SearchForm from "@/components/SearchForm";
 import GetawayCard from "@/components/GetawayCard";
@@ -6,8 +8,12 @@ import TripCard from "@/components/TripCard";
 import Footer from "@/components/Footer";
 import { Waves, Compass, Heart, Mountain, Users } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { useToast } from "@/hooks/use-toast";
 
 export default function Index() {
+  const { toast } = useToast();
+  const [showAllGetaways, setShowAllGetaways] = useState(false);
+
   const weekendGetaways = [
     {
       id: 1,
@@ -29,8 +35,75 @@ export default function Index() {
       description: "Secluded treehouse nestled in a lush forest, offering a unique and tranquil experience in nature.",
       imageUrl: "https://images.unsplash.com/photo-1509316975850-ff9c5deb0cd9?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80",
       location: "Redwood Forest"
+    },
+    {
+      id: 4,
+      title: "Desert Oasis",
+      description: "Modern villa with a private pool in the middle of a beautiful desert landscape with breathtaking sunsets.",
+      imageUrl: "https://images.unsplash.com/photo-1519378058457-4c29a0a2efac?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80",
+      location: "Mojave Desert"
+    },
+    {
+      id: 5,
+      title: "Lakeside Cabin",
+      description: "Cozy cabin with a private dock on a pristine mountain lake, perfect for fishing and water activities.",
+      imageUrl: "https://images.unsplash.com/photo-1499696010180-025ef6e1a8f9?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80",
+      location: "Lake Tahoe"
+    },
+    {
+      id: 6,
+      title: "Wine Country Villa",
+      description: "Elegant villa surrounded by vineyards with wine tasting tours and gourmet dining experiences.",
+      imageUrl: "https://images.unsplash.com/photo-1566750687978-2db8d0c79334?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80",
+      location: "Napa Valley"
     }
   ];
+
+  const trips = [
+    {
+      id: 1,
+      title: "Summer Beach Trip",
+      details: "Group beach vacation with activities and relaxation",
+      date: "Jul 10-17, 2024",
+      location: "Malibu Beach",
+      participants: 6
+    },
+    {
+      id: 2,
+      title: "Mountain Hiking Adventure",
+      details: "Week-long hiking and camping trip in the mountains",
+      date: "Aug 5-12, 2024",
+      location: "Rocky Mountains",
+      participants: 4
+    }
+  ];
+
+  const handleViewMoreSuggestions = () => {
+    setShowAllGetaways(!showAllGetaways);
+  };
+
+  const handleVoteOnOptions = () => {
+    toast({
+      title: "Group voting initiated",
+      description: "An email has been sent to all participants to vote on the trip options.",
+    });
+  };
+
+  const handleExploreNow = () => {
+    toast({
+      title: "Explore started",
+      description: "Starting your adventure discovery journey!",
+    });
+  };
+
+  const handleGetStarted = () => {
+    toast({
+      title: "Welcome to TrailPick!",
+      description: "Sign up to unlock all features and save your preferences.",
+    });
+  };
+
+  const displayedGetaways = showAllGetaways ? weekendGetaways : weekendGetaways.slice(0, 3);
 
   return (
     <div className="flex flex-col min-h-screen">
@@ -49,7 +122,10 @@ export default function Index() {
                 <p className="text-xl mb-8 opacity-90">
                   Find unique travel destinations tailored to your preferences, mood, and travel style.
                 </p>
-                <Button className="bg-white text-trailpick-blue hover:bg-white/90 rounded-full px-6">
+                <Button 
+                  className="bg-white text-trailpick-blue hover:bg-white/90 rounded-full px-6"
+                  onClick={handleExploreNow}
+                >
                   Explore Now
                 </Button>
               </div>
@@ -66,7 +142,7 @@ export default function Index() {
           <div className="container">
             <h2 className="text-3xl font-bold mb-8">Weekend Suggestions</h2>
             <div className="grid md:grid-cols-3 gap-6 mb-8">
-              {weekendGetaways.map((getaway) => (
+              {displayedGetaways.map((getaway) => (
                 <GetawayCard 
                   key={getaway.id}
                   title={getaway.title}
@@ -77,8 +153,12 @@ export default function Index() {
               ))}
             </div>
             <div className="text-center">
-              <Button variant="outline" className="rounded-full px-6">
-                View More Suggestions
+              <Button 
+                variant="outline" 
+                className="rounded-full px-6"
+                onClick={handleViewMoreSuggestions}
+              >
+                {showAllGetaways ? "Show Less" : "View More Suggestions"}
               </Button>
             </div>
           </div>
@@ -120,17 +200,22 @@ export default function Index() {
             <p className="text-muted-foreground mb-8">Plan and coordinate trips with friends and family</p>
             
             <div className="grid gap-4 mb-8">
-              <TripCard
-                title="Trip 1"
-                details="Details of trip"
-              />
-              <TripCard
-                title="Trip 2"
-                details="Details of trip"
-              />
+              {trips.map((trip) => (
+                <TripCard
+                  key={trip.id}
+                  title={trip.title}
+                  details={trip.details}
+                  date={trip.date}
+                  location={trip.location}
+                  participants={trip.participants}
+                />
+              ))}
             </div>
             
-            <Button className="w-full bg-trailpick-dark">
+            <Button 
+              className="w-full bg-trailpick-dark"
+              onClick={handleVoteOnOptions}
+            >
               Vote on Options
             </Button>
           </div>
@@ -141,8 +226,24 @@ export default function Index() {
           <div className="container">
             <h2 className="text-3xl font-bold text-center mb-12">What Travelers Say</h2>
             <div className="grid md:grid-cols-3 gap-8">
-              {[1, 2, 3].map((i) => (
-                <div key={i} className="bg-white p-6 rounded-lg shadow-sm border">
+              {[
+                {
+                  id: 1,
+                  text: "TrailPick helped us discover the perfect weekend getaway that we never would have found otherwise. The personalized recommendations were spot on!",
+                  author: "Sarah T."
+                },
+                {
+                  id: 2,
+                  text: "I love how easy it is to find places within a specific drive time. Found an amazing cabin just 2 hours away that's become our regular retreat.",
+                  author: "Michael K."
+                },
+                {
+                  id: 3,
+                  text: "The group planning feature made organizing our friend reunion so much easier. No more endless group chats trying to decide where to go!",
+                  author: "Jessica M."
+                }
+              ].map((testimonial) => (
+                <div key={testimonial.id} className="bg-white p-6 rounded-lg shadow-sm border">
                   <div className="flex items-center text-trailpick-orange mb-4">
                     {Array(5).fill(0).map((_, idx) => (
                       <svg key={idx} className="w-5 h-5 fill-current" viewBox="0 0 24 24">
@@ -151,9 +252,9 @@ export default function Index() {
                     ))}
                   </div>
                   <p className="text-muted-foreground mb-4">
-                    "TrailPick helped us discover the perfect weekend getaway that we never would have found otherwise. The personalized recommendations were spot on!"
+                    "{testimonial.text}"
                   </p>
-                  <div className="font-medium">Sarah T.</div>
+                  <div className="font-medium">{testimonial.author}</div>
                 </div>
               ))}
             </div>
@@ -167,7 +268,10 @@ export default function Index() {
             <p className="text-xl mb-8 opacity-90 max-w-2xl mx-auto">
               Sign up today and start discovering unique travel destinations tailored just for you.
             </p>
-            <Button className="bg-white text-trailpick-blue hover:bg-white/90 rounded-full px-8 py-6 text-lg">
+            <Button 
+              className="bg-white text-trailpick-blue hover:bg-white/90 rounded-full px-8 py-6 text-lg"
+              onClick={handleGetStarted}
+            >
               Get Started for Free
             </Button>
           </div>
