@@ -11,6 +11,7 @@ import {
 } from "@/components/ui/select";
 import { Search } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
+import { useNavigate } from "react-router-dom";
 
 export default function SearchForm() {
   const [location, setLocation] = useState("");
@@ -20,6 +21,7 @@ export default function SearchForm() {
   const [travelType, setTravelType] = useState("any");
   const [selectedTags, setSelectedTags] = useState<string[]>([]);
   const { toast } = useToast();
+  const navigate = useNavigate();
 
   const tags = ['Nature', 'Adventure', 'Relaxation', 'Beach', 'Mountains', 'Culture'];
 
@@ -36,7 +38,19 @@ export default function SearchForm() {
     
     toast({
       title: "Search initiated",
-      description: `Searching for ${travelType} trips near ${location || "your location"} within ${driveTime} drive time for ${guests} guests for ${days} days.${selectedTags.length > 0 ? ` Tags: ${selectedTags.join(", ")}` : ""}`,
+      description: `Finding destinations ${location ? `near ${location}` : ""} within ${driveTime} drive time for ${guests} guests for ${days} days.`,
+    });
+    
+    // Navigate to search results with search parameters
+    navigate('/search-results', {
+      state: {
+        location,
+        driveTime,
+        days,
+        guests,
+        travelType,
+        tags: selectedTags
+      }
     });
   };
 

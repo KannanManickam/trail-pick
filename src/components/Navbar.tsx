@@ -1,5 +1,5 @@
 
-import { LogIn, Menu, X } from "lucide-react";
+import { Compass, Globe, Menu, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   Sheet,
@@ -8,47 +8,75 @@ import {
   SheetTrigger,
 } from "@/components/ui/sheet";
 import { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import { useToast } from "@/hooks/use-toast";
 
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
+  const navigate = useNavigate();
+  const { toast } = useToast();
+
+  const handleDestinationsClick = () => {
+    navigate('/search-results', {
+      state: { travelType: "any" }
+    });
+    toast({
+      title: "Destinations",
+      description: "Exploring all available destinations",
+    });
+  };
+
+  const handleTripPlannerClick = () => {
+    toast({
+      title: "Trip Planner",
+      description: "Trip planner functionality coming soon!",
+    });
+  };
+
+  const handleTravelJournalClick = () => {
+    toast({
+      title: "Travel Journal",
+      description: "Travel journal functionality coming soon!",
+    });
+  };
 
   return (
     <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
       <div className="container flex h-16 items-center">
         <div className="mr-4 flex">
-          <a className="flex items-center" href="/">
+          <Link className="flex items-center" to="/">
             <span className="text-2xl font-bold bg-gradient-to-r from-trailpick-blue to-trailpick-green bg-clip-text text-transparent">
               TrailPick
             </span>
             <span className="ml-2 text-lg text-muted-foreground">🧭</span>
-          </a>
+          </Link>
         </div>
         <div className="flex flex-1 items-center justify-end space-x-2">
           <nav className="hidden md:flex items-center space-x-6">
-            <a
-              href="#"
-              className="text-sm font-medium transition-colors hover:text-primary"
+            <button
+              onClick={handleDestinationsClick}
+              className="text-sm font-medium transition-colors hover:text-primary flex items-center"
             >
+              <Compass className="mr-1 h-4 w-4" />
               Destinations
-            </a>
-            <a
-              href="#"
+            </button>
+            <button
+              onClick={handleTripPlannerClick}
               className="text-sm font-medium transition-colors hover:text-primary"
             >
               Trip Planner
-            </a>
-            <a
-              href="#"
+            </button>
+            <button
+              onClick={handleTravelJournalClick}
               className="text-sm font-medium transition-colors hover:text-primary"
             >
               Travel Journal
-            </a>
+            </button>
           </nav>
           <Button variant="outline" size="sm" className="hidden md:flex">
-            <LogIn className="mr-2 h-4 w-4" />
-            Log In
+            <Globe className="mr-2 h-4 w-4" />
+            English
           </Button>
-          <Button className="hidden md:flex">Sign Up</Button>
           <Sheet open={isOpen} onOpenChange={setIsOpen}>
             <SheetTrigger asChild>
               <Button
@@ -63,35 +91,35 @@ export default function Navbar() {
             <SheetContent side="right" className="w-[300px] sm:w-[400px]">
               <nav className="flex flex-col gap-4 mt-8">
                 <SheetClose asChild>
-                  <a
-                    href="#"
-                    className="text-base font-medium transition-colors hover:text-primary"
+                  <button
+                    onClick={handleDestinationsClick}
+                    className="text-base font-medium transition-colors hover:text-primary flex items-center"
                   >
+                    <Compass className="mr-2 h-4 w-4" />
                     Destinations
-                  </a>
+                  </button>
                 </SheetClose>
                 <SheetClose asChild>
-                  <a
-                    href="#"
+                  <button
+                    onClick={handleTripPlannerClick}
                     className="text-base font-medium transition-colors hover:text-primary"
                   >
                     Trip Planner
-                  </a>
+                  </button>
                 </SheetClose>
                 <SheetClose asChild>
-                  <a
-                    href="#"
+                  <button
+                    onClick={handleTravelJournalClick}
                     className="text-base font-medium transition-colors hover:text-primary"
                   >
                     Travel Journal
-                  </a>
+                  </button>
                 </SheetClose>
                 <div className="flex flex-col gap-2 mt-4">
                   <Button variant="outline" className="w-full justify-start">
-                    <LogIn className="mr-2 h-4 w-4" />
-                    Log In
+                    <Globe className="mr-2 h-4 w-4" />
+                    English
                   </Button>
-                  <Button className="w-full">Sign Up</Button>
                 </div>
               </nav>
             </SheetContent>
