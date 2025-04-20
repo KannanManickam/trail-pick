@@ -1,5 +1,5 @@
 
-import { Compass, Globe, Menu, X } from "lucide-react";
+import { Compass, Globe, Menu } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   Sheet,
@@ -7,12 +7,19 @@ import {
   SheetContent,
   SheetTrigger,
 } from "@/components/ui/sheet";
+import { 
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useToast } from "@/hooks/use-toast";
 
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
+  const [currentLanguage, setCurrentLanguage] = useState<'English' | 'हिंदी'>('English');
   const navigate = useNavigate();
   const { toast } = useToast();
 
@@ -27,16 +34,18 @@ export default function Navbar() {
   };
 
   const handleTripPlannerClick = () => {
-    toast({
-      title: "Trip Planner",
-      description: "Trip planner functionality coming soon!",
-    });
+    navigate('/trip-planner');
   };
 
   const handleTravelJournalClick = () => {
+    navigate('/travel-journal');
+  };
+
+  const handleLanguageChange = (language: 'English' | 'हिंदी') => {
+    setCurrentLanguage(language);
     toast({
-      title: "Travel Journal",
-      description: "Travel journal functionality coming soon!",
+      title: "Language Changed",
+      description: `Language has been changed to ${language}`,
     });
   };
 
@@ -73,10 +82,24 @@ export default function Navbar() {
               Travel Journal
             </button>
           </nav>
-          <Button variant="outline" size="sm" className="hidden md:flex">
-            <Globe className="mr-2 h-4 w-4" />
-            English
-          </Button>
+          
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant="outline" size="sm" className="hidden md:flex">
+                <Globe className="mr-2 h-4 w-4" />
+                {currentLanguage}
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent>
+              <DropdownMenuItem onClick={() => handleLanguageChange('English')}>
+                English
+              </DropdownMenuItem>
+              <DropdownMenuItem onClick={() => handleLanguageChange('हिंदी')}>
+                हिंदी
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
+
           <Sheet open={isOpen} onOpenChange={setIsOpen}>
             <SheetTrigger asChild>
               <Button
@@ -116,9 +139,21 @@ export default function Navbar() {
                   </button>
                 </SheetClose>
                 <div className="flex flex-col gap-2 mt-4">
-                  <Button variant="outline" className="w-full justify-start">
+                  <Button 
+                    variant="outline" 
+                    className="w-full justify-start"
+                    onClick={() => handleLanguageChange('English')}
+                  >
                     <Globe className="mr-2 h-4 w-4" />
                     English
+                  </Button>
+                  <Button 
+                    variant="outline" 
+                    className="w-full justify-start"
+                    onClick={() => handleLanguageChange('हिंदी')}
+                  >
+                    <Globe className="mr-2 h-4 w-4" />
+                    हिंदी
                   </Button>
                 </div>
               </nav>
